@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>TODO List</title>
+</head>
+
+<body>
+    <!--
+    - the action parameter tells us which route the request will be sent to
+    - the method parameter tells us which HTTP method will be used to send the
+      request
+  -->
+    <form id="todoForm" action="/todos" method="POST">
+        <h1>Squanch TODO:</h1>
+        <!-- the name attribute is used as the key for the req.body object -->
+        <div>
+            <div id="li_1">
+                <label class="description" for="element_1">What you got?</label>
+                <div>
+                    <input name="todo" type="text" maxlength="255" /><input type="submit" name="submit" />
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <br>
+    <div>
+        {{#todos}}
+        <div>
+            <form action="/completed" method="POST">
+                <input name="submit" type="submit" />
+                <input name="completed" type="text" value="{{.}}" hidden="true"> {{.}}
+            </form>
+        </div>
+        {{/todos}}
+    </div>
+
+    <h1>You done did:</h1>
+    {{#completed}}
+    <div>
+        {{.}}
+    </div>
+    {{/completed}}
+
+</body>
+
+</html>
