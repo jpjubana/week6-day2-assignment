@@ -3,7 +3,6 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-// adds file system methods that aren't included in the native fs module and adds promise support to the fs methods.
 const fs = require('fs-extra');
 const Busboy = require('busboy');
 
@@ -14,46 +13,43 @@ app.engine('mustache', mustacheExpress());
 app.set('views', './views');
 app.set('view engine', 'mustache')
 
+const models = require("./models");
 
 /* middleware *****************************************************************/
 
-
-// serve static content out of this directory
-// parse all requests using the generic body parser (req.body is now available)
 app.use(bodyParser.urlencoded({ extended: true }));
-// gives us a way to validate input (e.g., ensure emails are valid)
-
 
 /* routes *********************************************************************/
 
-const todos = [
-    " thing1",
-    " thing2",
-    " thing3"
-];
-
-const completed = [
-    "done did this"
-];
-
 app.get("/", function(req, res) {
-    res.render('index', { todos: todos, completed: completed });
+    models.todolist.findAll().then(function(todos) {
+        console.log(models.todolist);
+        res.render('index', { todos: todos });
+    })
 });
 
 app.post("/todos", function(req, res) {
-    todos.push(req.body.todo);
-    res.redirect('/');
+    models.todolist.create({
+        title: req.body.todo
+    }).then(function(newTodo) {
+        res.redirect('/');
+    });
 });
 
 app.post("/completed", function(req, res) {
-    completed.push(req.body.completed);
-    const i = todos.indexOf(completed)
-    todos.splice(i, 1);
-    res.redirect('/');
+    models.todolist.update({
+        title: req.body.completed,
+        completed_at: "t"
+    }, {
+        where: {
+            id: req.body.completed
+        }
+    }).then(function(completed) {
+        res.redirect('/');
+    })
 });
 
 /* Error Handlers go under here! ******************************************************/
-
 
 // Start 
 

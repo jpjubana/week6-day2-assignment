@@ -29,19 +29,11 @@
         {{#todos}}
         <div>
             <form action="/completed" method="POST">
-                <input name="submit" type="submit" />
-                <input name="completed" type="text" value="{{.}}" hidden="true"> {{.}}
+                <input type="text" name="completed" value="{{title}}" /><input type="submit" name="submit">
             </form>
         </div>
         {{/todos}}
     </div>
-
-    <h1>You done did:</h1>
-    {{#completed}}
-    <div>
-        {{.}}
-    </div>
-    {{/completed}}
 
 </body>
 
